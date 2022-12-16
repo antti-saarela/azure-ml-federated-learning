@@ -79,7 +79,7 @@ az keyvault secret set --name kaggleusername --vault-name kv-fmldemo --value ant
 ```
 
 ```
-az keyvault secret set --name kagglekey --vault-name kv-fmldemo --value 705ec8d83ba8e1c3db9b53e69d3ff3b5
+az keyvault secret set --name kagglekey --vault-name kv-fmldemo --value xxx
 ```
 
 
