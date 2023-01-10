@@ -2,9 +2,9 @@
 
 # using this to store references to Azure ML
 aml:
-  # subscription_id: "<SUBSCRIPTION_ID>"
-  # resource_group_name: "<RESOURCE_GROUP>"
-  # workspace_name: "<AML_WORKSPACE_NAME>"
+  subscription_id: "4fcaeb12-537a-4364-9e34-0e499d30c4c1"
+  resource_group_name: "asa-fml"
+  workspace_name: "aml-fmldemo"
 
 # federated learning parameters
 federated_learning:
@@ -34,6 +34,6 @@ federated_learning:
 
 # training parameters
 training_parameters:
-  num_of_iterations: 2
+  num_of_iterations: 5
   epochs: 5
   lr: 0.01

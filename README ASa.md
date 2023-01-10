@@ -89,12 +89,6 @@ az keyvault secret set --name kagglekey --vault-name kv-fmldemo --value xxx
 python ./examples/pipelines/utils/upload_data/submit.py --submit --example PNEUMONIA
 ```
 
-and then run
-
-```
-python ./examples/pipelines/pneumonia/submit.py --submit
-```
-
 ## Create and run the ML pipeline
 
 ```
