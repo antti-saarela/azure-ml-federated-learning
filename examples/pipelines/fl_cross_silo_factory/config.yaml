@@ -12,9 +12,9 @@
 
 # References to Azure ML workspace (use cli args to override)
 aml:
-  "subscription_id": "4fcaeb12-537a-4364-9e34-0e499d30c4c1"
-  "resource_group": "asa-fml"
-  "workspace_name": "aml-fmldemo"
+  # subscription_id: "<SUBSCRIPTION_ID>"
+  # resource_group_name: "<RESOURCE_GROUP>"
+  # workspace_name: "<AML_WORKSPACE_NAME>"
 
 # Parameters to generate the FL graph
 federated_learning:
@@ -38,16 +38,27 @@ federated_learning:
         mode: 'download'
         path: https://azureopendatastorage.blob.core.windows.net/mnist/processed/t10k.csv
 
-    - compute: arc-kind-laptop
+    - compute: cpu-silo1-francecentral # we are repeating over the same config for silo 2
       datastore: datastore_silo1_francecentral
       training_data:
         type: uri_file
         mode: 'download'
-        path:  http://172.17.0.1:8888/mnt/localdata/ml_data/mnist/train.csv
+        path: https://azureopendatastorage.blob.core.windows.net/mnist/processed/train.csv
       testing_data:
         type: uri_file
         mode: 'download'
-        path: http://172.17.0.1:8888/mnt/localdata/ml_data/mnist/t10k.csv
+        path: https://azureopendatastorage.blob.core.windows.net/mnist/processed/t10k.csv
+
+    - compute: cpu-silo2-brazilsouth # we are repeating over the same config for silo 3
+      datastore: datastore_silo2_brazilsouth
+      training_data:
+        type: uri_file
+        mode: 'download'
+        path: https://azureopendatastorage.blob.core.windows.net/mnist/processed/train.csv
+      testing_data:
+        type: uri_file
+        mode: 'download'
+        path: https://azureopendatastorage.blob.core.windows.net/mnist/processed/t10k.csv
 
 # Training parameters
 training_parameters:

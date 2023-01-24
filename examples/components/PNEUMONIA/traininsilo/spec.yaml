@@ -16,7 +16,7 @@ inputs:
   epochs:
     type: integer
     description: total number of epochs for local training
-    default: 5
+    default: 3
     optional: true
   dataset_name:
     type: uri_folder

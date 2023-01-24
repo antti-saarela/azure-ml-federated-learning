@@ -272,7 +272,7 @@ if args.submit:
     print("Submitting the pipeline job to your AzureML workspace...")
     ML_CLIENT = connect_to_aml()
     pipeline_job = ML_CLIENT.jobs.create_or_update(
-        pipeline_job, experiment_name="fl_demo_pneumonia" # , skip_validation=True
+        pipeline_job, experiment_name="fl_demo_pneumonia"
     )
 
     print("The url to see your live job running is returned by the sdk:")

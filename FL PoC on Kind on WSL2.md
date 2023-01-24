@@ -388,7 +388,13 @@ Then run
 python "/mnt/c/Users/saareant/OneDrive - TietoEVRY/Care/git/GitHub/azure-ml-federated-learning/examples/pipelines/fl_cross_silo_literal/submit.py" --submit
 ```
 
-or
+or to test using local data
+
+```
+python "/mnt/c/Users/saareant/OneDrive - TietoEVRY/Care/git/GitHub/azure-ml-federated-learning/examples/pipelines/read_local_data_in_k8s/submit.py" --submit
+```
+
+or with more complex "factory" setup
 
 ```
 python "/mnt/c/Users/saareant/OneDrive - TietoEVRY/Care/git/GitHub/azure-ml-federated-learning/examples/pipelines/fl_cross_silo_factory/submit.py" --submit
@@ -399,6 +405,10 @@ or to run without validation
 ```
 python "/mnt/c/Users/saareant/OneDrive - TietoEVRY/Care/git/GitHub/azure-ml-federated-learning/examples/pipelines/fl_cross_silo_factory/submit.py" --submit --ignore_validation
 ```
+
+<br>
+
+---
 
 
 ## (OPTIONAL) Share files using python httpServer
@@ -411,6 +421,9 @@ python3 -m  http.server 8888
 sudo iptables -I INPUT -p tcp --dport 8888 -j ACCEPT
 ```
 
+<br>
+
+---
 
 ## (OPTIONAL) Share local files over http using Samba server
 

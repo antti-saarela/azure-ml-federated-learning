@@ -2,9 +2,9 @@
 
 # using this to store references to Azure ML
 aml:
-  subscription_id: "4fcaeb12-537a-4364-9e34-0e499d30c4c1"
-  resource_group_name: "asa-fml"
-  workspace_name: "aml-fmldemo"
+  # subscription_id: "<SUBSCRIPTION_ID>"
+  # resource_group_name: "<RESOURCE_GROUP>"
+  # workspace_name: "<AML_WORKSPACE_NAME>"
 
 # federated learning parameters
 federated_learning:
@@ -13,11 +13,6 @@ federated_learning:
     datastore: "datastore_orchestrator"
 
   silos:
-    - compute: arc-kind-laptop
-      silo_data:
-        type: uri_folder
-        mode: 'direct'
-        path: ./mnt/localdata/ml_data/
     - compute: cpu-silo0-westus
       datastore: datastore_silo0_westus
       silo_data:
@@ -39,6 +34,6 @@ federated_learning:
 
 # training parameters
 training_parameters:
-  num_of_iterations: 5
+  num_of_iterations: 2
   epochs: 5
   lr: 0.01
