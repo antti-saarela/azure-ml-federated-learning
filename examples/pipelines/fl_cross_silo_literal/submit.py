@@ -209,16 +209,18 @@ def fl_cross_silo_internal_basic():
     for silo_index, silo_config in enumerate(YAML_CONFIG.federated_learning.silos):
         # run the pre-processing component once
         silo_pre_processing_step = preprocessing_component(
-            raw_training_data=Input(
-                type=silo_config.training_data.type,
-                mode=silo_config.training_data.mode,
-                path=silo_config.training_data.path,
-            ),
-            raw_testing_data=Input(
-                type=silo_config.testing_data.type,
-                mode=silo_config.testing_data.mode,
-                path=silo_config.testing_data.path,
-            ),
+            # raw_training_data=Input(
+            #     type=silo_config.training_data.type,
+            #     mode=silo_config.training_data.mode,
+            #     path=silo_config.training_data.path,
+            # ),
+            raw_training_data=silo_config.training_data.path,
+            # raw_testing_data=Input(
+            #     type=silo_config.testing_data.type,
+            #     mode=silo_config.testing_data.mode,
+            #     path=silo_config.testing_data.path,
+            # ),
+            raw_testing_data=silo_config.testing_data.path,
             metrics_prefix=silo_config.compute,
         )
 

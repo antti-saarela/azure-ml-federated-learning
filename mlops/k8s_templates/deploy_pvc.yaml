@@ -19,7 +19,7 @@ spec:
       - name: name
         image: gcr.io/google-containers/echoserver:1.10
         volumeMounts:
-        - mountPath: /localdata # Path on the docker file system where the local data folder was mounted.
+        - mountPath: /mnt/localdata # Path on the docker file system where the local data folder was mounted.
           name: localdata
       volumes:
         - name: localdata

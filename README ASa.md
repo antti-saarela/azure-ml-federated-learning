@@ -95,3 +95,41 @@ python ./examples/pipelines/utils/upload_data/submit.py --submit --example PNEUM
 python ./examples/pipelines/pneumonia/submit.py --submit
 ```
 
+### Debugging the ML Pipeline
+
+
+Add the following to `launch.json`
+
+```
+{
+    "name": "Python: Remote Attach",
+    "type": "python",
+    "request": "attach",
+    "connect": {
+        "host": "localhost",
+        "port": 5678
+    },
+    "pathMappings": [
+        {
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "."
+        }
+    ],
+    "justMyCode": true
+},
+```
+
+Start python program to be debugged with
+
+```
+python -m debugpy --listen 5678 --wait-for-client ./examples/pipelines/pneumonia/submit.py --submit
+```
+
+Create a new Command Prompt terminal to active conda env
+
+Start debugging (F5)
+
+
+```
+python ./examples/pipelines/pneumonia/submit.py --submit
+```
