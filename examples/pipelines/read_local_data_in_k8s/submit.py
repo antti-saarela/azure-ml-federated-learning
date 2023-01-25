@@ -197,14 +197,17 @@ def read_local_data_basic():
     read_local_data_step.compute = silo_config.compute
 
     # make sure the data are written to the right datastore
-    read_local_data_step.outputs.preprocessed_local_data = Output(
-        type=AssetTypes.URI_FOLDER,
-        mode="mount",
-        path=custom_fl_data_path(
-            silo_config.datastore, "preprocessed_data",
-            unique_id=pipeline_identifier
-        ),
-    )
+    # read_local_data_step.outputs.preprocessed_local_data = Output(
+    #     type=AssetTypes.URI_FOLDER,
+    #     mode="mount",
+    #     path=custom_fl_data_path(
+    #         silo_config.datastore, "preprocessed_data",
+    #         unique_id=pipeline_identifier
+    #     ),
+    # )
+
+    read_local_data_step.outputs.preprocessed_local_data = \
+        silo_config.preprocessed_local_data
 
     print("Output path=", read_local_data_step.outputs.preprocessed_local_data)
 

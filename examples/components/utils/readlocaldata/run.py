@@ -37,20 +37,20 @@ def run(args):
 
     print(os.path.abspath(os.curdir))
 
-    print("Contents of local working folder . :")
+    # print("Contents of local working folder . :")
 
-    for p in Path(".").rglob("*"):
-        print(p)
+    # for p in Path(".").rglob("*"):
+    #     print(p)
 
     print("Contents of local data folder given in input:", args.local_data_path_input)
 
     for p in Path(args.local_data_path_input).rglob("*"):
         print(p)
 
-    print("Contents of local data folder given in /tmp/azureml/cr/j/")
+    # print("Contents of local data folder given in /tmp/azureml/cr/j/")
 
-    for p in Path("/tmp/azureml/cr/j/").rglob("*"):
-        print(p)
+    # for p in Path("/tmp/azureml/cr/j/").rglob("*"):
+    #     print(p)
     
 
     # Read the contents of the local data file
@@ -66,7 +66,7 @@ def run(args):
         preprocessed_lines
     )  # Be careful here, you don't want to print sensitive user data!
 
-    print("trying to write to", args.preprocessed_local_data_output, "data_file.txt")
+    print("Next trying to write output data to", args.preprocessed_local_data_output, "data_file.txt")
 
     # write the preprocessed data to the output
     with open(
