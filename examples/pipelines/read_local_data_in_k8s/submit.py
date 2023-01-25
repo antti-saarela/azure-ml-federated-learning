@@ -201,9 +201,12 @@ def read_local_data_basic():
         type=AssetTypes.URI_FOLDER,
         mode="mount",
         path=custom_fl_data_path(
-            silo_config.datastore, "preprocessed_data", unique_id=pipeline_identifier
+            silo_config.datastore, "preprocessed_data",
+            unique_id=pipeline_identifier
         ),
     )
+
+    print("Output path=", read_local_data_step.outputs.preprocessed_local_data)
 
     # let's keep track of the checkpoint to be used as input for next iteration
     preprocessed_output = read_local_data_step.outputs.preprocessed_local_data

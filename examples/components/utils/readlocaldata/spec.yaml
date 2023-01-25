@@ -14,7 +14,7 @@ inputs:
     default: /mnt/localdata
 outputs:
   preprocessed_local_data:
-    type: uri_folder
+    type: string
     description: the output data after preprocessing
 
 code: .

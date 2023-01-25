@@ -21,6 +21,7 @@ federated_learning:
       datastore: datastore_silo1_francecentral # name of the datastore for the external silo - you will need to adjust this to match the one you created
       # training inputs are specified below
       local_data_path: /mnt/localdata # the path at which the local data are accessed by the Azure Ml job.
+      preprocessed_local_data: /mnt/localdata/output
       # training_data:
       #   type: uri_file
       #   mode: 'download'

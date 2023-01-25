@@ -3,6 +3,7 @@ import argparse
 import logging
 import sys
 import glob
+from pathlib import Path
 
 
 def get_arg_parser(parser=None):
@@ -31,6 +32,27 @@ def get_arg_parser(parser=None):
 
 def run(args):
     """Component run function. This will read the local data, preproces them, and write the preprocessed data to the output."""
+
+    print("Where are we currently")
+
+    print(os.path.abspath(os.curdir))
+
+    print("Contents of local working folder . :")
+
+    for p in Path(".").rglob("*"):
+        print(p)
+
+    print("Contents of local data folder given in input:", args.local_data_path_input)
+
+    for p in Path(args.local_data_path_input).rglob("*"):
+        print(p)
+
+    print("Contents of local data folder given in /tmp/azureml/cr/j/")
+
+    for p in Path("/tmp/azureml/cr/j/").rglob("*"):
+        print(p)
+    
+
     # Read the contents of the local data file
     with open(os.path.join(args.local_data_path_input, "data_file.txt")) as in_f:
         lines = in_f.readlines()
@@ -44,9 +66,11 @@ def run(args):
         preprocessed_lines
     )  # Be careful here, you don't want to print sensitive user data!
 
+    print("trying to write to", args.preprocessed_local_data_output, "data_file.txt")
+
     # write the preprocessed data to the output
     with open(
-        os.path.join(args.preprocessed_local_data_output, "data_file.txt")
+        os.path.join(args.preprocessed_local_data_output, "output_data_file.txt"), "w"
     ) as out_f:
         out_f.writelines(preprocessed_lines)
 

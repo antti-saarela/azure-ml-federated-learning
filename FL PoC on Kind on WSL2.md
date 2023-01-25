@@ -279,17 +279,29 @@ Then run:
 
 `kubectl apply -f ./mlops/k8s_templates/pv.yaml`
 
+and vewrify 
+
+`kubectl get pv -n default`
+
 ### Create a Persistent Volume Claim
 To create the PVC, first make sure that the name in the metadata of pvc.yaml matches the name of the claimRef in pv.yaml. Also make sure that the metadata has the following labels and annotations, as these are the key parts that are required for the Azure ML job to be able to access the local data:
+
+```
 labels:
     app: demolocaldata
     ml.azure.com/pvc: "true"
 annotations:
     ml.azure.com/mountpath: "/mnt/localdata" # The path from which the local data will be accessed during the Azure ML job. 
 
+```
+
 Then run: 
 
 `kubectl apply -f ./mlops/k8s_templates/pvc.yaml`
+
+and verify
+
+` kubectl get pvc -n default`
 
 ### Deploy a Persistent Volume Claim
 
@@ -299,8 +311,18 @@ Then run:
 
 `kubectl apply -f ./mlops/k8s_templates/deploy_pvc.yaml`
 
+
+
 🏁 Checkpoint:
-Before moving forward, we recommend you check that the local data can indeed by accessed from the k8s cluster. To do so, start by getting the name of the pod that was created by the deployment by running kubectl get pods. Then, open a bash session on the k8s by running kubectl exec -it <your-pod-name> bash. Finally, run ls <path-in-docker> to check that the data in that folder are indeed visible (if you didn't change the default values in the yaml files mentioned above, then your <path-on-docker> should be /localdata - it is simply the path in pv.yaml).
+Before moving forward, we recommend you check that the local data can indeed by accessed from the k8s cluster. To do so, start by getting the name of the pod that was created by the deployment by running 
+
+`kubectl get pods`. 
+
+Then, open a bash session on the k8s by running 
+
+`kubectl exec -it <your-pod-name> bash`
+
+ Finally, run `ls /localdata` to check that the data in that folder are indeed visible (if you didn't change the default values in the yaml files mentioned above, then your <path-on-docker> should be `/localdata` - it is simply the path in pv.yaml).
 
 
 ## Create a dedicated namespace for FL jobs
@@ -409,42 +431,4 @@ python "/mnt/c/Users/saareant/OneDrive - TietoEVRY/Care/git/GitHub/azure-ml-fede
 <br>
 
 ---
-
-
-## (OPTIONAL) Share files using python httpServer
-
-```
-python3 -m  http.server 8888
-```
-
-```
-sudo iptables -I INPUT -p tcp --dport 8888 -j ACCEPT
-```
-
-<br>
-
----
-
-## (OPTIONAL) Share local files over http using Samba server
-
-`sudo apt-get install samba -y`
-
-`sudo nano /etc/samba/smb.conf`
-
-Make necessary changes to Samba conf.
-
-```
-[public]
-  comment = public anonymous access
-  path = /home/saareant/
-  browsable =no
-  create mask = 0660
-  directory mask = 0771
-  writable = no
-  guest ok = yes
-```
-
-Then restart Samba service
-
-`sudo systemctl restart smbd`
 
