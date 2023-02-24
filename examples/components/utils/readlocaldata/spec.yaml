@@ -5,7 +5,7 @@ version: 0.1.0
 display_name: Read local data (in silo)
 type: command
 description: Component for reading local data in a silo
-is_deterministic: true
+is_deterministic: false
 
 inputs:
   local_data_path:
@@ -20,6 +20,6 @@ outputs:
 code: .
 
 command: >-
-  python run.py --local_data_path_input ${{inputs.local_data_path}} --preprocessed_local_data_output ${{outputs.preprocessed_local_data}}
+  python run.py --local_data_path_input ${{inputs.local_data_path}} --preprocessed_local_data ${{outputs.preprocessed_local_data}}
 
 environment: azureml:AzureML-sklearn-1.0-ubuntu20.04-py38-cpu:30

@@ -190,7 +190,23 @@ export ArcRG=AzureArcTest
 export ArcMLClusterName=arcml-$KINDCLUSTER
 export AML_Compute=aml-cmp-$KINDCLUSTER
 export UAI_AML_Compute=uai-$AML_Compute
+export AML_FL_NS=default
 ```
+
+For a named namespace use case run also
+
+```
+export KINDCLUSTER=amlext
+export subscription_id=4fcaeb12-537a-4364-9e34-0e499d30c4c1
+export AML_RG=asa-fml
+export AML_WS_NAME=aml-fmldemo
+export ArcRG=AzureArcTest
+export ArcMLClusterName=arcml-$KINDCLUSTER
+export AML_Compute=$KINDCLUSTER-ns
+export AML_FL_NS=$KINDCLUSTER
+export UAI_AML_Compute=uai-$AML_Compute
+```
+
 
 Check contents of k8s config
 
@@ -202,11 +218,23 @@ more "./mlops/k8s_templates/k8s_config.yaml"
 kind create cluster -n $KINDCLUSTER --config="./mlops/k8s_templates/k8s_config.yaml"
 ```
 
-Connect the new Kind cluster to Azure with Arc
-
 ```
+cd ~
 az login
 ```
+
+Verify kubeconfig
+```
+more "~/.kube/config"
+```
+
+Verify Azure account
+
+```
+az account show
+```
+
+### Connect the new Kind cluster to Azure with Arc
 
 ```
 az connectedk8s connect --name $ArcMLClusterName --resource-group $ArcRG --kube-config ~/.kube/config  --kube-context kind-$KINDCLUSTER
@@ -244,9 +272,47 @@ Create a user-assigned identity (UAI) that will later be assigned to the Azure M
 az identity create --name $UAI_AML_Compute --resource-group $AML_RG
 ```
 
+You can attach the AML Compute to a specific namespace inside your k8s or use the default namespace _default_.
+
+The first script below uses default and the latter ones create and use a specific namespace. The named namespace must pre-exist before attachment.
+
 ```
 az ml compute attach --resource-group $AML_RG --workspace-name $AML_WS_NAME --type Kubernetes --name $AML_Compute --resource-id "/subscriptions/$subscription_id/resourceGroups/$ArcRG/providers/Microsoft.Kubernetes/connectedClusters/$ArcMLClusterName" --identity-type UserAssigned --user-assigned-identities "subscriptions/$subscription_id/resourceGroups/$AML_RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/$UAI_AML_Compute" --no-wait    
 ```
+
+### Detach the compute frmo the namespace
+
+```
+az ml compute detach -g $AML_RG -w $AML_WS_NAME  -n $AML_Compute
+```
+
+
+## Attch AML Compute to a dedicated k8s namespace
+
+### Create a dedicated namespace for FL jobs
+
+```
+kubectl create ns $AML_FL_NS
+```
+
+### Attach the compute to the namespace
+
+```
+az ml compute attach --resource-group $AML_RG --workspace-name $AML_WS_NAME --type Kubernetes --name $AML_Compute --resource-id "/subscriptions/$subscription_id/resourceGroups/$ArcRG/providers/Microsoft.Kubernetes/connectedClusters/$ArcMLClusterName" --identity-type UserAssigned --user-assigned-identities "subscriptions/$subscription_id/resourceGroups/$AML_RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/$UAI_AML_Compute" --namespace $AML_FL_NS --no-wait
+```
+
+Show details of the compute target
+
+```
+az ml compute show -g $AML_RG -w $AML_WS_NAME  -n $AML_Compute
+```
+
+### Detach the compute frmo the namespace
+
+```
+az ml compute detach -g $AML_RG -w $AML_WS_NAME  -n $AML_Compute
+```
+
 
 
 ## Deleting the Arc ML extension
@@ -324,10 +390,6 @@ Then, open a bash session on the k8s by running
 
  Finally, run `ls /localdata` to check that the data in that folder are indeed visible (if you didn't change the default values in the yaml files mentioned above, then your <path-on-docker> should be `/localdata` - it is simply the path in pv.yaml).
 
-
-## Create a dedicated namespace for FL jobs
-
-`kubectl create ns aml-fl-ns`
 
 <br>
 

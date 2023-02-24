@@ -62,6 +62,10 @@ conda env create --file ./examples/pipelines/environment.yml
 conda activate fl_experiment_conda_env
 ```
 
+or 
+
+Press F1 and select `Python: Create Terminal`
+
 ### Running Pneumonia sample
 
 Download config.json from portal and place it to the repo root folder.

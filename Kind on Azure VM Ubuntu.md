@@ -3,7 +3,20 @@ Connect to remote Ubuntu VM
 https://dev.azure.com/tietodata/hus-findata/_wiki/wikis/hus-findata.wiki/497/Installing-Arc-enabled-Kind-on-Ubuntu
 
 
-For example `az ssh vm --ip 137.135.221.8`
+Add your Azure user account an IAM role `Virtual Machine Administrator Login`
+
+Then login to the VM using Azure AD authentication
+
+For example:
+
+arc-ubuntu-vm:
+`az ssh vm --ip 137.135.221.8`
+
+arc-vm-ubuntu:
+`az ssh vm --ip 74.234.66.194`
+
+Or connect using Azure portal -> Ubuntu VM -> Bastion
+Enter username and password and connect
 
 # Prepare local env
 
@@ -61,9 +74,8 @@ Add this line:
 
 `<your user> ALL=(ALL) NOPASSWD: /usr/bin/dockerd`
 
-Test docker with `docker ps`
+### Start docker daemon
 
-Start dockerd
 ```
 sudo systemctl start docker.service
 ```
@@ -74,39 +86,154 @@ sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
 ```
 
-Test docker
+### Test docker
+
+```
+systemctl status docker
+```
+
 ```
 docker ps
+```
+
+#### If out of storage check usage
+
+```
+df -h
+```
+
+```
+sudo du -d1 -h /var/lib/docker | sort -hr
+```
+
+Clear docker files
+
+```
+sudo rm -rf /var/lib/docker
+```
+
+Start docker daemon
+```
+sudo systemctl start docker
+```
+
+Check status of docker
+```
+sudo systemctl status docker
 ```
 
 # Create and start a KinD cluster 
 
 ## Set environment variables
 
-
+### KinD Ubuntu instance to isfss-caretech-datadev
 ```
 
 export subscription_id=4fcaeb12-537a-4364-9e34-0e499d30c4c1
 export AML_RG=asa-fml
 export AML_WS_NAME=aml-fmldemo
 export ArcRG=AzureArcTest
-export KINDCLUSTER=arckind
-export ArcMLClusterName=cc-kind-$KINDCLUSTER
-export AML_Compute=arc-k8s-$KINDCLUSTER
+export CLUSTER_NAME=arckind
+export K8S_CLUSTER_NAME=kind-$CLUSTER_NAME
+export ArcMLClusterName=cc-kind-$CLUSTER_NAME
+export AML_Compute=arc-k8s-$CLUSTER_NAME
 export UAI_AML_Compute=uai-$AML_Compute
 
+```
+
+### For HUS Tietoallastesti use:
+
+```
+
+export subscription_id=63f1b6c1-4995-43a2-8a16-26940300677f
+export AML_RG=husfd-te-federated-learning
+export AML_WS_NAME=aml-fld4
+export ArcRG=husfd-te-federated-learning
+export CLUSTER_NAME=arc-te
+export K8S_CLUSTER_NAME=kind-$CLUSTER_NAME
+export ArcMLClusterName=cc-kind-$CLUSTER_NAME
+export AML_Compute=k8s-$CLUSTER_NAME
+export UAI_AML_Compute=uai-$AML_Compute
+
+```
+
+For TE OD sub ArcBox use:
+
+### CAPI instance
+```
+
+export subscription_id=c681687c-a73f-4eb6-ba76-6660ef58bf50
+export AML_RG=od-tdp-fl-silo-poc-ArcBox-RG
+export AML_WS_NAME=od-tdp-fl-aml-ws
+export ArcRG=od-tdp-fl-silo-poc-ArcBox-RG
+export CLUSTER_NAME=arcbxca
+export K8S_CLUSTER_NAME=$CLUSTER_NAME
+export ArcMLClusterName=cc-ca-$CLUSTER_NAME
+export AML_Compute=k8s-$CLUSTER_NAME
+export UAI_AML_Compute=uai-$AML_Compute
+
+```
+
+### CAPI instance to isfss-caretech-datadev
+```
+
+export subscription_id=4fcaeb12-537a-4364-9e34-0e499d30c4c1
+export AML_RG=asa-fml
+export AML_WS_NAME=aml-fmldemo
+export ArcRG=AzureArcTest
+
+export CLUSTER_NAME=arcbxca
+export K8S_CLUSTER_NAME=$CLUSTER_NAME
+export ArcMLClusterName=cc-ca-$CLUSTER_NAME
+export AML_Compute=k8s-$CLUSTER_NAME
+export UAI_AML_Compute=uai-$AML_Compute
+
+```
+
+
+### K3s instance
+```
+
+export subscription_id=c681687c-a73f-4eb6-ba76-6660ef58bf50
+export AML_RG=od-tdp-fl-silo-poc-ArcBox-RG
+export AML_WS_NAME=od-tdp-fl-aml-ws
+export ArcRG=od-tdp-fl-silo-poc-ArcBox-RG
+
+export CLUSTER_NAME=arcbox-k3s
+export K8S_CLUSTER_NAME=$CLUSTER_NAME
+export ArcMLClusterName=cc-$CLUSTER_NAME
+export AML_Compute=k8s-$CLUSTER_NAME
+export UAI_AML_Compute=uai-$AML_Compute
+
+```
+
+### K3s instance to isfss-caretech-datadev
+
+```
+export subscription_id=4fcaeb12-537a-4364-9e34-0e499d30c4c1
+export AML_RG=asa-fml
+export AML_WS_NAME=aml-fmldemo
+export ArcRG=AzureArcTest
+
+export CLUSTER_NAME=arcbox-k3s
+export K8S_CLUSTER_NAME=$CLUSTER_NAME
+export ArcMLClusterName=cc-$CLUSTER_NAME
+export AML_Compute=k8s-$CLUSTER_NAME
+export UAI_AML_Compute=uai-$AML_Compute
+
+az account set -n $subscription_id
 ```
 
 ---
 
 1. If not created, create a kind cluster 
-    1. Run `kind create cluster -n $KINDCLUSTER`
+    1. Run `kind create cluster -n $CLUSTER_NAME`
 1. Run `kubectl cluster-info`
 1. List Kind cluster with `kind get clusters`
 
-If needed switch kube context back to this cluster with `kubectl config set current-context kind-$KINDCLUSTER`
+If needed switch kube context back to this cluster with `kubectl config set current-context $K8S_CLUSTER_NAME`
 
-To delete the Kind cluster run `kind delete cluster -n $KINDCLUSTER`
+To delete the Kind cluster run `kind delete cluster -n $CLUSTER_NAME`
 
 
 
@@ -151,9 +278,21 @@ az extension update --name k8s-extension
 az extension update --name ml
 ```
 
-Login to your Azure account
+### Login to a speficic Azure tenant using your Azure account
+
+HUS Tietoallastesti
 ```
-az login
+az login -u ext-antti.saarela@hustietoallastesti.fi -t 7de4405f-a24c-490d-af4a-f2ec4a6835c9
+```
+
+Industry Software Development 
+```
+az login -u antti.saarela@tietoevry.com -t 81b59a4e-f4e0-4903-be71-0ee63ff2b992
+```
+
+Tietoevry Care - Cloud Data Analytics OD
+```
+az login -u antti.saarela@tietoevry.com -t e0f2cbcb-d762-4271-911d-c230db46c8ac
 ```
 
 Set default subscription
@@ -166,38 +305,83 @@ az account list --query "[?isDefault]" -o table
 
 # Connect KinD cluster to Azure with Arc
 
-The command below will connect a k8s cluster to Azure in ConnectedClusters mode
-
+Verify kubeconfig
 ```
-az connectedk8s connect --name cc-kind-$KINDCLUSTER --resource-group $ArcRG --kube-config ~/.kube/config  --kube-context kind-$KINDCLUSTER
+more "$HOME/.kube/config"
 ```
 
-# List Arc-enabled connected k8s clusters
+## List Arc-enabled connected k8s clusters
 
 ```
 az connectedk8s list -o table
 ```
 
-# Show details of a connected cluster
-```
-az connectedk8s show --name cc-kind-$KINDCLUSTER --resource-group $ArcRG
-```
+## Connect the k8s cluster to Azure using Arc
 
-# Delete an Arc-enabled connected k8s cluster
+The command below will connect a k8s cluster to Azure in ConnectedClusters mode
 
 ```
-az connectedk8s delete --name cc-kind-$KINDCLUSTER --resource-group $ArcRG --kube-config ~/.kube/config  --kube-context kind-$KINDCLUSTER
+az connectedk8s connect --name $ArcMLClusterName --resource-group $ArcRG --kube-config $HOME/.kube/config --kube-context $K8S_CLUSTER_NAME
 ```
+
+or just
+
+```
+az connectedk8s connect --name $ArcMLClusterName --resource-group $ArcRG
+```
+
+### Show details of a connected cluster
+```
+az connectedk8s show --name cc-kind-$CLUSTER_NAME --resource-group $ArcRG
+```
+
+### Troubleshoot the Arc ConnectCluster connection
+To troubleshoot the Arc ConnectCluster connection run
+
+```
+az connectedk8s troubleshoot --name $ArcMLClusterName --resource-group $ArcRG
+```
+
+and
+
+```
+kubectl get pods -n azure-arc
+```
+
+### Delete an Arc-enabled connected k8s cluster connection to Azure
+
+```
+az connectedk8s delete --name $ArcMLClusterName --resource-group $ArcRG --kube-config $HOME/.kube/config  --kube-context $K8S_CLUSTER_NAME
+```
+
+```
+az connectedk8s delete --name od-tdp-fl-silo-poc-ArcBox-K3s-0Fud --resource-group od-tdp-fl-silo-poc-ArcBox-RG
+```
+
 
 Wait...
 
 # Install Azure Arc ML extension
 
+## Create Arc ML extension to cluster
+
 ```
-az k8s-extension create --name arc-k8s-ml --extension-type Microsoft.AzureML.Kubernetes --config enableTraining=True --cluster-type connectedClusters --cluster-name cc-kind-$KINDCLUSTER --resource-group $ArcRG --scope cluster
+az k8s-extension create --name arc-k8s-ml --extension-type Microsoft.AzureML.Kubernetes --config enableTraining=True --cluster-type connectedClusters --cluster-name $ArcMLClusterName --resource-group $ArcRG --scope cluster
 ```
 
+
 ## Verify ML extension install
+
+Verify Arc ML extension installation
+
+
+Check the details of installed Azure Arc ML extension
+
+```
+az k8s-extension show --name arc-k8s-ml --cluster-type connectedClusters --cluster-name $ArcMLClusterName --resource-group $ArcRG
+```
+
+Check also the pods
 
 ```
 kubectl get pods -n azureml
@@ -217,11 +401,6 @@ volcano-controllers-695dd87b59-j59m4              1/1     Running     0         
 volcano-scheduler-65dcb7666-t7j96                 1/1     Running     0             51m
 ```
 
-Check the details of installed Azure Arc ML extension
-
-```
-az k8s-extension show -n arc-k8s-ml -t connectedClusters --cluster-name cc-kind-$KINDCLUSTER --resource-group $ArcRG
-```
 
 
 ## Create a dedicated namespace for FL jobs
@@ -229,7 +408,7 @@ az k8s-extension show -n arc-k8s-ml -t connectedClusters --cluster-name cc-kind-
 `kubectl create ns aml-fl-ns`
 
 
-## Attach the Arc cluster to the orchestrator ML workspace
+## Attach the Arc cluster to the FL orchestrator AML workspace
 
 Create a user-assigned identity (UAI) that will later be assigned to the Azure ML attached compute:
 
@@ -237,14 +416,16 @@ Create a user-assigned identity (UAI) that will later be assigned to the Azure M
 az identity create --name $UAI_AML_Compute --resource-group $AML_RG
 ```
 
-```
+### Attach the Arc-enabled k8s cluster as k8s compute
 
+```
 az ml compute attach --resource-group $AML_RG --workspace-name $AML_WS_NAME --type Kubernetes --name $AML_Compute --resource-id "/subscriptions/$subscription_id/resourceGroups/$ArcRG/providers/Microsoft.Kubernetes/connectedClusters/$ArcMLClusterName" --identity-type UserAssigned --user-assigned-identities "subscriptions/$subscription_id/resourceGroups/$AML_RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/$UAI_AML_Compute" --no-wait
 
 ```
 
+# Running AML Pipelines from remote client
 
-# Install python env on Ubuntu
+##  Install python env on Ubuntu
 
 ```
 sudo apt install python3-pip
@@ -260,42 +441,55 @@ source ~/fedml_venv/bin/activate
 
 ## Clone federated learning repo
 
+```
+mkdir fl-repo
+cd fl-repo
+git clone https://github.com/Azure-Samples/azure-ml-federated-learning.git
+```
+
+# git config --global user.email "antti.saarela@tietoevry.com"
+# git config --global user.name "saarela"
+
+*TBD*
 
 ## Install requirements
 
 ```
+cd azure-ml-federated-learning
 pip install -r examples/pipelines/requirements.txt 
 ```
 
+**TODO: Left here on 6.2.2023**
+
+# Run Federated Learning samples on Ubuntu
 
 ```
-cd ~
-sudo chmod -R ugo+r ./mnt/localdata/
-```
-
-# Run samples in WSL2 Ubuntu
-
-```
-cd ~
+cd azure-ml-federated-learning
 source ~/fedml_venv/bin/activate
 ```
 
 Then run
 
 ```
-python "/mnt/c/Users/saareant/OneDrive - TietoEVRY/Care/git/GitHub/azure-ml-federated-learning/examples/pipelines/fl_cross_silo_literal/submit.py" --submit
+python "azure-ml-federated-learning/examples/pipelines/fl_cross_silo_literal/submit.py" --submit
 ```
 
 or
 
 ```
-python "/mnt/c/Users/saareant/OneDrive - TietoEVRY/Care/git/GitHub/azure-ml-federated-learning/examples/pipelines/fl_cross_silo_factory/submit.py" --submit
+python "azure-ml-federated-learning/examples/pipelines/pneumonia/submit.py" --submit
+```
+
+or
+
+```
+python "azure-ml-federated-learning/examples/pipelines/fl_cross_silo_factory/submit.py" --submit
 ```
 
 or to run without validation
 
 ```
-python "/mnt/c/Users/saareant/OneDrive - TietoEVRY/Care/git/GitHub/azure-ml-federated-learning/examples/pipelines/fl_cross_silo_factory/submit.py" --submit --ignore_validation
+python "azure-ml-federated-learning/examples/pipelines/fl_cross_silo_factory/submit.py" --submit --ignore_validation
 ```
 
 
@@ -345,7 +539,7 @@ Before moving forward, we recommend you check that the local data can indeed by 
 ## Deleting the Kind cluster
 
 ```
-kind delete cluster --name arc-kind
+kind delete cluster -n $CLUSTER_NAME
 ```
 
 ---
@@ -408,6 +602,11 @@ pip install -r examples/pipelines/requirements.txt
 
 https://learn.microsoft.com/en-us/azure/virtual-machines/linux/use-remote-desktop?tabs=azure-cli
 
+See this page for install instructions:
+
+https://learn.microsoft.com/en-us/azure/bastion/bastion-connect-vm-rdp-linux
+
+
 ```
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y install xfce4
@@ -437,7 +636,6 @@ sudo apt install net-tools
 az vm open-port --resource-group <rg-name> --name <vm-name> --port 3389
 ```
 
-
 # Install Remote VS Code on Ubuntu VM
 
 ## Create SSH authentication
@@ -446,13 +644,22 @@ Generate SSH key pairs
 
 `ssh-keygen -t rsa -b 4096 -f %USERPROFILE%/.ssh/linux_rsa`
 
-Copy public kety to remote VM
+Copy public key to remote VM
 
 `scp %USERPROFILE%/.ssh/linux_rsa.pub saarela@137.135.221.8:~/key.pub`
+
+or
+
+`scp %USERPROFILE%/.ssh/linux_rsa.pub saarela@74.234.66.194:~/key.pub`
+
 
 Login to remote VM
 
 `ssh saarela@137.135.221.8`
+
+or
+
+`ssh saarela@74.234.66.194`
 
 Run
 
@@ -476,8 +683,11 @@ Restart the service:
 
 Connect VS Code to Remote VM
 
-ssh -i %USERPROFILE%/.ssh/linux_rsa saarela@137.135.221.8
+`ssh -i %USERPROFILE%/.ssh/linux_rsa saarela@137.135.221.8`
 
+or
+
+`ssh -i %USERPROFILE%/.ssh/linux_rsa saarela@74.234.66.194`
 
 # Install VS Code extensions to remote VM
 
