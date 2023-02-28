@@ -2,9 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pvc
-  namespace: default
+  namespace: arclocal
   labels:
-    app: demolocaldata
+    app: custom_localdata
 spec:
   replicas: 1
   selector:
@@ -24,4 +24,4 @@ spec:
       volumes:
         - name: localdata
           persistentVolumeClaim:
-            claimName: demolocaldata
+            claimName: custom_localdata_claim

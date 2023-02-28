@@ -1,6 +1,7 @@
 # Kubernetes Templates
 
 ## Contents
+
 This folder contains example yaml templates you can use for creating kubernetes (k8s) clusters meeting different types of requirements.
 
 > Note: Please keep in mind that for both use cases you need to create an AzureML instance type, process is documented at the end of the [following document](../../docs/provisioning/silo_open_aks_with_cc.md)

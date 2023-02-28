@@ -233,6 +233,7 @@ def fl_pneumonia_basic():
             # we're using training component here
             silo_training_step = training_component(
                 # with the train_data from the pre_processing step
+                # dataset_name=silo_config.silo_data,
                 dataset_name=Input(
                     type=silo_config.silo_data.type,
                     mode=silo_config.silo_data.mode,
@@ -342,7 +343,7 @@ if not args.offline:
     print("Submitting the pipeline job to your AzureML workspace...")
     ML_CLIENT = connect_to_aml()
     pipeline_job = ML_CLIENT.jobs.create_or_update(
-        pipeline_job, experiment_name="fl_demo_pneumonia"
+        pipeline_job, experiment_name="fl_demo_pnmn_te_and_ms_silos"
     )
 
     print("The url to see your live job running is returned by the sdk:")

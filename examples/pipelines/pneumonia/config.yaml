@@ -20,6 +20,11 @@ federated_learning:
       silo_data:
         type: uri_folder
         mode: 'download'
+
+      #     path: azureml://datastores/datastore_silo0_westus/paths/federated_learning/pneumonia
+      # - compute: k8s-arcbox-k3s
+      #   datastore: datastore_silo1_francecentral
+
         path: azureml://datastores/datastore_silo0/paths/federated_learning/pneumonia
 
     - name: silo1

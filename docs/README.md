@@ -119,6 +119,13 @@ This repo provides some code samples for running a federated learning pipeline i
 | [examples](../examples) | Scripts and pipelines to run FL sample experiments. |
 | [mlops](../mlops) | Provisioning scripts. See instructions [here](./provisioning/README.md). |
 
+
+## Targeted tutorials
+Besides the full end-to-end real-world examples, we also provide targeted tutorials for specific scenarios.
+
+### Read local data in an on-premises Kubernetes silo
+This tutorial will show you how to access, within an Azure ML job running on an on-premises Kubernetes (k8s) cluster, some data in the local file system. It will guide you through the entire process: k8s cluster creation and configuration, attachment to Azure ML as an external silo, and finally test job. See [here](./targeted-tutorials/read-local-data-in-k8s-silo.md) for detailed instructions.
+
 ## Provisioning guide
 
 This guide will help you adapt your own setup depending on your provisioning strategy and your constraints. See [here](./provisioning/README.md) for detailed instructions.
