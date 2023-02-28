@@ -78,6 +78,10 @@ class PTLearner:
         self.train_dataset_, self.test_dataset_ = self.load_dataset(
             dataset_dir, transforms
         )
+
+        # print("type(self.train_dataset_)", type(self.train_dataset_))
+        # print(len(self.train_dataset_))
+
         self.train_loader_ = DataLoader(
             dataset=self.train_dataset_, batch_size=32, shuffle=True, drop_last=True
         )
@@ -100,6 +104,8 @@ class PTLearner:
         test_dataset = datasets.ImageFolder(
             root=os.path.join(data_dir, "test"), transform=transforms
         )
+
+        print(*train_dataset.find_classes(train_dataset.root), sep=", ")
 
         return train_dataset, test_dataset
 
