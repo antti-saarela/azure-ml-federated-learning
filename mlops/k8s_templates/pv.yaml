@@ -4,6 +4,7 @@ metadata:
   name: custom_localdata
   labels:
     app: custom_localdata
+
 spec:
   storageClassName: manual
 

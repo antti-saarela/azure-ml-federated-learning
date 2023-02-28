@@ -116,6 +116,9 @@ def preprocess_data(
     logger.debug(f"Train data samples: {len(train_data)}")
     logger.debug(f"Test data samples: {len(test_data)}")
 
+    os.makedirs(train_data_dir, exist_ok=True)
+    os.makedirs(test_data_dir, exist_ok=True)
+
     train_data = train_data.sort_values(by="trans_date_trans_time")
     test_data = test_data.sort_values(by="trans_date_trans_time")
 
@@ -132,19 +135,20 @@ def log_metadata(train_df, test_df, metrics_prefix):
     with mlflow.start_run() as mlflow_run:
         # get Mlflow client
         mlflow_client = mlflow.tracking.client.MlflowClient()
-        logger.debug(f"Root runId: {mlflow_run.data.tags.get('mlflow.rootRunId')}")
         root_run_id = mlflow_run.data.tags.get("mlflow.rootRunId")
-        mlflow_client.log_metric(
-            run_id=root_run_id,
-            key=f"{metrics_prefix}/Number of train datapoints",
-            value=f"{train_df.shape[0]}",
-        )
+        logger.debug(f"Root runId: {root_run_id}")
+        if root_run_id:
+            mlflow_client.log_metric(
+                run_id=root_run_id,
+                key=f"{metrics_prefix}/Number of train datapoints",
+                value=f"{train_df.shape[0]}",
+            )
 
-        mlflow_client.log_metric(
-            run_id=root_run_id,
-            key=f"{metrics_prefix}/Number of test datapoints",
-            value=f"{test_df.shape[0]}",
-        )
+            mlflow_client.log_metric(
+                run_id=root_run_id,
+                key=f"{metrics_prefix}/Number of test datapoints",
+                value=f"{test_df.shape[0]}",
+            )
 
 
 def main(cli_args=None):
@@ -180,7 +184,6 @@ def main(cli_args=None):
 
 
 if __name__ == "__main__":
-
     # Set logging to sys.out
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
