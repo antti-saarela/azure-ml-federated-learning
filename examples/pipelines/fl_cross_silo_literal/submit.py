@@ -367,7 +367,7 @@ if not args.offline:
     print("Submitting the pipeline job to your AzureML workspace...")
     ML_CLIENT = connect_to_aml()
     pipeline_job = ML_CLIENT.jobs.create_or_update(
-        pipeline_job, experiment_name="fl_dev"
+        pipeline_job, experiment_name="fl_dev_literal_frac_retrain"
     )
 
     print("The url to see your live job running is returned by the sdk:")

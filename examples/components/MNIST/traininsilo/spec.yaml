@@ -5,7 +5,7 @@ version: 0.3.0
 display_name: MNIST Train (in silo)
 type: command
 description: Component to train a model on MNIST dataset.
-is_deterministic: true
+is_deterministic: false
 
 inputs:
   train_data:
