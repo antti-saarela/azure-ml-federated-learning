@@ -79,9 +79,6 @@ class PTLearner:
             dataset_dir, transforms
         )
 
-        # print("type(self.train_dataset_)", type(self.train_dataset_))
-        # print(len(self.train_dataset_))
-
         self.train_loader_ = DataLoader(
             dataset=self.train_dataset_, batch_size=32, shuffle=True, drop_last=True
         )
