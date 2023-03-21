@@ -39,4 +39,39 @@ run-mnist.bat
 ```
 
 
+## Authentication to AMLS from jumpbox VM
 
+By default in an Azure VM you'll see 
+
+```
+Submitting the pipeline job to your AzureML workspace...
+[INFO azure.identity._credentials.environment] No environment configuration found.
+[INFO azure.identity._credentials.managed_identity] ManagedIdentityCredential will use IMDS
+[INFO azure.identity._credentials.chained] DefaultAzureCredential acquired a token from ManagedIdentityCredential
+```
+
+ManagedIdentityCredential needs to be disabled by authenticating without it:
+```python
+    credential = DefaultAzureCredential(exclude_managed_identity_credential=True)
+```
+
+Refer to 
+https://learn.microsoft.com/en-us/python/api/azure-identity/azure.identity.defaultazurecredential?view=azure-python
+
+```
+exclude_environment_credential bool
+Whether to exclude a service principal configured by environment variables from the credential. Defaults to False.
+
+exclude_managed_identity_credential bool
+Whether to exclude managed identity from the credential. Defaults to False.
+
+exclude_powershell_credential bool
+Whether to exclude Azure PowerShell. Defaults to False.
+
+exclude_visual_studio_code_credential
+bool
+Whether to exclude stored credential from VS Code. Defaults to False.
+
+exclude_shared_token_cache_credential bool
+Whether to exclude the shared token cache. Defaults to False.
+```

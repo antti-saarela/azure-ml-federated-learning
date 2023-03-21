@@ -27,6 +27,7 @@ from azure.ai.ml import load_component
 # to handle yaml config easily
 from omegaconf import OmegaConf
 
+import logging
 
 ############################
 ### CONFIGURE THE SCRIPT ###
@@ -106,7 +107,17 @@ SHARED_COMPONENTS_FOLDER = os.path.join(
 
 def connect_to_aml():
     try:
-        credential = DefaultAzureCredential()
+
+        logger = logging.getLogger('azure.identity')
+        logger.setLevel(logging.INFO)
+
+        handler = logging.StreamHandler(stream=sys.stdout)
+        formatter = logging.Formatter('[%(levelname)s %(name)s] %(message)s')
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+
+        credential = DefaultAzureCredential(exclude_managed_identity_credential=True)
+
         # Check if given credential can get token successfully.
         credential.get_token("https://management.azure.com/.default")
     except Exception as ex:
@@ -127,10 +138,10 @@ def connect_to_aml():
     except Exception as ex:
         print("Could not find either cli args or config.yaml.")
         # tries to connect using local config.json
+        
         ML_CLIENT = MLClient.from_config(credential=credential)
 
     return ML_CLIENT
-
 
 ####################################
 ### LOAD THE PIPELINE COMPONENTS ###
@@ -361,11 +372,12 @@ def fl_cross_silo_internal_basic():
 pipeline_job = fl_cross_silo_internal_basic()
 
 # Inspect built pipeline
-print(pipeline_job)
+# print(pipeline_job)
 
 if not args.offline:
     print("Submitting the pipeline job to your AzureML workspace...")
     ML_CLIENT = connect_to_aml()
+
     pipeline_job = ML_CLIENT.jobs.create_or_update(
         pipeline_job, experiment_name="fl_dev"
     )
