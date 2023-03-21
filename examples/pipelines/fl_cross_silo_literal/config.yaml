@@ -20,9 +20,9 @@ aml:
 federated_learning:
   orchestrator:
     # name of compute for orchestrator
-    compute: "orchestrator-01"
+    compute: "flhsorch-01"
     # name of datastore for orchestrator (saving model weights + aggregate)
-    datastore: "datastore_orchestrator"
+    datastore: "datastore_flhsorch"
 
   silos: # silos are provided as a list
     - name: fls1
