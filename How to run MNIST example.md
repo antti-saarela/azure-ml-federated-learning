@@ -75,3 +75,18 @@ Whether to exclude stored credential from VS Code. Defaults to False.
 exclude_shared_token_cache_credential bool
 Whether to exclude the shared token cache. Defaults to False.
 ```
+
+
+## Prepare k8s in Silo
+
+```
+sudo kubectl create namespace fl-mnist-tr
+
+sudo kubectl config set-context $(sudo kubectl config current-context) --namespace=fl-mnist-tr
+```
+
+2. Attach the Arc cluster to the orchestrator workspace, or in other words _create an Azure ML attached compute pointing to the Arc cluster_:
+
+```bash
+az ml compute attach --resource-group <workspace-resource-group> --workspace-name <workspace-name> --type Kubernetes --name <azureml-compute-name> --resource-id "/subscriptions/<subscription-id>/resourceGroups/<connected-cluster-resource-group>/providers/Microsoft.Kubernetes/connectedClusters/<Azure-Arc-enabled-k8s-resource-name>" --identity-type UserAssigned --user-assigned-identities "subscriptions/<subscription-id>/resourceGroups/<workspace-resource-group>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/uai-<azureml-compute-name>" --no-wait    
+```
