@@ -40,18 +40,18 @@ federated_learning:
         mode: 'download'
         path: https://azureopendatastorage.blob.core.windows.net/mnist/processed/t10k.csv
 
-    # - name: silo1
-    #   computes: 
-    #   - silo1-01 # we are repeating over the same config for silo 2
-    #   datastore: datastore_silo1
-    #   training_data:
-    #     type: uri_file
-    #     mode: 'download'
-    #     path: https://azureopendatastorage.blob.core.windows.net/mnist/processed/train.csv
-    #   testing_data:
-    #     type: uri_file
-    #     mode: 'download'
-    #     path: https://azureopendatastorage.blob.core.windows.net/mnist/processed/t10k.csv
+    - name: fls2
+      computes: 
+      - arcbox-k3s # we are repeating over the same config for silo 2
+      datastore: datastore_fls2
+      training_data:
+        type: uri_file
+        mode: 'download'
+        path: https://azureopendatastorage.blob.core.windows.net/mnist/processed/train.csv
+      testing_data:
+        type: uri_file
+        mode: 'download'
+        path: https://azureopendatastorage.blob.core.windows.net/mnist/processed/t10k.csv
 
     # - name: silo2
     #   computes: 
