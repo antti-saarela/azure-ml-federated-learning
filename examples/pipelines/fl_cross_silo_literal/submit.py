@@ -234,7 +234,7 @@ def fl_cross_silo_internal_basic():
         )
 
         # add a readable name to the step
-        silo_pre_processing_step.name = f"silo_{silo_index}_preprocessing"
+        silo_pre_processing_step.name = f"{silo_config.name}_preprocessing"
 
         # make sure the compute corresponds to the silo
         silo_pre_processing_step.compute = silo_config.computes[0]
@@ -309,7 +309,7 @@ def fl_cross_silo_internal_basic():
                 iteration_num=iteration,
             )
             # add a readable name to the step
-            silo_training_step.name = f"silo_{silo_index}_training"
+            silo_training_step.name = f"silo_{silo_config.name}_training"
 
             # make sure the compute corresponds to the silo
             silo_training_step.compute = silo_config.computes[0]
@@ -327,7 +327,7 @@ def fl_cross_silo_internal_basic():
                 path=custom_fl_data_path(
                     # IMPORTANT: writing the output of training into the orchestrator datastore
                     YAML_CONFIG.federated_learning.orchestrator.datastore,
-                    f"model/silo{silo_index}",
+                    f"model/{silo_config.name}",
                     iteration_num=iteration,
                 ),
             )

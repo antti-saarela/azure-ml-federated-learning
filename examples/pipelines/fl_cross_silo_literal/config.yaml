@@ -25,10 +25,10 @@ federated_learning:
     datastore: "datastore_flhsorch"
 
   silos: # silos are provided as a list
-    - name: fls1
+    - name: flx1
       computes: 
-      - fls1-01 # name of the compute for silo X
-      datastore: datastore_fls1 # name of the datastore for silo X
+      - flx1-01 # name of the compute for silo X
+      datastore: datastore_flx1 # name of the datastore for silo X
       # training inputs are specified below
       # NOTE: in this demo, we're using public data from a url instead
       training_data:
@@ -40,10 +40,10 @@ federated_learning:
         mode: 'download'
         path: https://azureopendatastorage.blob.core.windows.net/mnist/processed/t10k.csv
 
-    - name: fls2
+    - name: flx2
       computes: 
       - arcbox-k3s # we are repeating over the same config for silo 2
-      datastore: datastore_fls2
+      datastore: datastore_flx2
       training_data:
         type: uri_file
         mode: 'download'
