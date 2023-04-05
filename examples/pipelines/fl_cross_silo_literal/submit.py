@@ -223,7 +223,7 @@ def fl_cross_silo_internal_basic():
         )
 
         # add a readable name to the step
-        silo_pre_processing_step.name = f"silo_{silo_index}_preprocessing"
+        silo_pre_processing_step.name = f"{silo_config.name}_preprocessing" # f"silo_{silo_index}_preprocessing"
 
         # make sure the compute corresponds to the silo
         silo_pre_processing_step.compute = silo_config.computes[0]
