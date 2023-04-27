@@ -35,5 +35,6 @@ command: >-
   python run.py --raw_training_data ${{inputs.raw_training_data}} --raw_testing_data ${{inputs.raw_testing_data}} --train_output ${{outputs.processed_train_data}} --test_output ${{outputs.processed_test_data}} $[[--metrics_prefix ${{inputs.metrics_prefix}}]]
 
 environment: 
-  conda_file: ./conda.yaml
-  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04
+  # conda_file: ./conda.yaml
+  # image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04
+  image: crfld4.azurecr.io/azureml/azureml_5763b69c2e8d7d79b6e8ea973f651081:latest

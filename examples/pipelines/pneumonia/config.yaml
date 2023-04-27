@@ -6,39 +6,24 @@ aml:
   # resource_group_name: "<RESOURCE_GROUP>"
   # workspace_name: "<AML_WORKSPACE_NAME>"
 
-# federated learning parameters
+# Parameters to generate the FL graph
 federated_learning:
   orchestrator:
-    compute: "orchestrator-01"
+    # name of compute for orchestrator
+    compute: "cpu-orchestrator"
+    # name of datastore for orchestrator (saving model weights + aggregate)
     datastore: "datastore_orchestrator"
 
-  silos:
-    - name: silo0
+  silos: # silos are provided as a list
+    - name: flaksedgearc
       computes: 
-      - silo0-01 # name of the compute for silo X
-      datastore: datastore_silo0
+      - k8s-flaksedgearc # name of the compute for silo X
+      instance_type: defaultinstancetype
+      datastore: datastore_silo0_northeurope # name of the datastore for silo X
       silo_data:
         type: uri_folder
         mode: 'download'
-        path: azureml://datastores/datastore_silo0/paths/federated_learning/pneumonia
-
-    - name: silo1
-      computes: 
-      - silo1-01 # we are repeating over the same config for silo 2
-      datastore: datastore_silo1
-      silo_data:
-        type: uri_folder
-        mode: 'download'
-        path: azureml://datastores/datastore_silo1/paths/federated_learning/pneumonia
-
-    - name: silo2
-      computes: 
-      - silo2-01 # we are repeating over the same config for silo 3
-      datastore: datastore_silo2
-      silo_data:
-        type: uri_folder
-        mode: 'download'
-        path: azureml://datastores/datastore_silo2/paths/federated_learning/pneumonia
+        path: azureml://datastores/datastore_silo0_northeurope/paths/federated_learning/pneumonia
 
 # training parameters
 training_parameters:

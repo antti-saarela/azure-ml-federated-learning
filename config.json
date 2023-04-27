@@ -1,5 +1,5 @@
 {
-    "subscription_id": "4fcaeb12-537a-4364-9e34-0e499d30c4c1",
-    "resource_group": "rg-amlhs-dev",
-    "workspace_name": "mlw-amlhs-dev"
+    "subscription_id": "63f1b6c1-4995-43a2-8a16-26940300677f",
+    "resource_group": "husfd-te-federated-learning",
+    "workspace_name": "aml-fld4"
 }

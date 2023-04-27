@@ -205,7 +205,7 @@ pipeline_identifier = getUniqueIdentifier()
 @pipeline(
     description=f'FL cross-silo basic pipeline and the unique identifier is "{pipeline_identifier}" that can help you to track files in the storage account.',
 )
-def fl_cross_silo_internal_basic():
+def fl_cross_silo_frac():
     ######################
     ### PRE-PROCESSING ###
     ######################
@@ -369,7 +369,7 @@ def fl_cross_silo_internal_basic():
     return {"final_aggregated_model": running_checkpoint}
 
 
-pipeline_job = fl_cross_silo_internal_basic()
+pipeline_job = fl_cross_silo_frac()
 
 # Inspect built pipeline
 # print(pipeline_job)

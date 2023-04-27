@@ -90,8 +90,8 @@ def preprocess_data(
     logger.info(
         f"Raw Training Data path: {raw_training_data}, Raw Testing Data path: {raw_testing_data}, Processed Training Data dir path: {train_data_dir}, Processed Testing Data dir path: {test_data_dir}"
     )
-    train_data = pd.read_csv(raw_training_data)
-    test_data = pd.read_csv(raw_testing_data)
+    train_data = pd.read_csv(raw_training_data).sample(frac=0.05)
+    test_data = pd.read_csv(raw_testing_data).sample(frac=0.05)
 
     logger.debug(f"Segregating labels and features")
     X_train = torch.tensor(train_data.loc[:, train_data.columns != "label"].values)
